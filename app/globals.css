@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #e8ddd0;
+  --bg-card: rgba(255, 253, 248, 0.85);
+  --text-primary: #3d3427;
+  --text-secondary: #8a7e6d;
+  --accent-green: #059669;
+  --accent-amber: #b45309;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Yu Gothic', 'Hiragino Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+/* Classroom themed glass card */
+.classroom-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(180, 170, 150, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(60, 50, 30, 0.08), 0 1px 3px rgba(60, 50, 30, 0.05);
+  transition: all 0.3s ease;
+}
+
+.classroom-card:hover {
+  box-shadow: 0 8px 30px rgba(60, 50, 30, 0.12), 0 2px 6px rgba(60, 50, 30, 0.08);
+}
+
+/* Legacy glass card support */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(180, 170, 150, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(60, 50, 30, 0.08);
+}
+
+/* Subtle floating animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0ebe4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4b9a8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a89b87;
+}
+
+/* Math Fraction Styling */
+.math-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 4px;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+.math-numerator {
+  border-bottom: 1px solid currentColor;
+  padding: 0 2px;
+  display: block;
+}
+
+.math-denominator {
+  padding-top: 1px;
+  display: block;
+}
+
+.math-brace {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+.math-var {
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif !important;
+  font-style: italic !important;
+}
+/* Math Exponent Styling */
+.math-exp {
+  font-size: 0.7em;
+  vertical-align: super;
+  position: relative;
+  top: -0.2em;
+  margin-left: 1px;
+}
+
+/* Higher Specificity Math Exponent Styling */
+sup.math-exp {
+  font-size: 0.7em !important;
+  vertical-align: super !important;
+  line-height: 0 !important;
+  position: relative !important;
+  top: -0.1em !important;
+  margin-left: 1px !important;
+}
