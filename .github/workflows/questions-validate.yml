@@ -1,0 +1,45 @@
+name: Validate Questions Data
+
+on:
+  pull_request:
+    paths:
+      - "app/data/questions.ts"
+      - "public/questions.json"
+      - "public/questions/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/questions-validate.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "app/data/questions.ts"
+      - "public/questions.json"
+      - "public/questions/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/questions-validate.yml"
+
+jobs:
+  validate-questions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate categories index
+        run: npm run regenerate:categories-index
+
+      - name: Validate questions data
+        run: npm run validate:questions

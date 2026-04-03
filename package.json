@@ -3,10 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "export:questions-json": "node scripts/export-questions-json.js",
+    "regenerate:categories-index": "node scripts/regenerate-categories-index.js",
+    "validate:questions:source": "node scripts/validate-questions.js --source",
+    "validate:questions:json": "node scripts/validate-questions.js --json",
+    "validate:questions": "npm run validate:questions:json",
+    "backup:questions": "powershell -ExecutionPolicy Bypass -File scripts/backup-questions.ps1",
+    "safe-save:questions": "powershell -ExecutionPolicy Bypass -File scripts/safe-save-questions.ps1"
   },
   "dependencies": {
     "@react-three/fiber": "^9.5.0",
