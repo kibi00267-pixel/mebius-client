@@ -3,6 +3,7 @@ const path = require('path');
 
 const projectRoot = process.cwd();
 const questionsDir = path.join(projectRoot, 'public', 'questions');
+const questionsJsonPath = path.join(projectRoot, 'public', 'questions.json');
 const treeDataPath = path.join(projectRoot, 'app', 'create-test', 'page.tsx');
 const outPath = path.join(questionsDir, '_categories.json');
 
@@ -37,31 +38,53 @@ function loadQuestionCount(filePath) {
 }
 
 function main() {
-    if (!fs.existsSync(questionsDir)) {
-        throw new Error(`Directory not found: ${questionsDir}`);
-    }
-
     const nameMap = parseNamesFromTreeData();
-    const files = fs
-        .readdirSync(questionsDir)
-        .filter((f) => f.endsWith('.json') && f !== '_categories.json')
-        .sort();
-
     const categories = [];
 
-    for (const file of files) {
-        const id = path.basename(file, '.json');
-        if (!/^\d{2}(?:-\d{2}){3}$/.test(id)) {
-            continue;
+    if (!fs.existsSync(questionsDir)) {
+        fs.mkdirSync(questionsDir, { recursive: true });
+    }
+
+    const hasPerCategoryFiles = fs
+        .readdirSync(questionsDir)
+        .some((f) => f.endsWith('.json') && f !== '_categories.json' && /^\d{2}(?:-\d{2}){3}\.json$/.test(f));
+
+    if (hasPerCategoryFiles) {
+        const files = fs
+            .readdirSync(questionsDir)
+            .filter((f) => f.endsWith('.json') && f !== '_categories.json')
+            .sort();
+
+        for (const file of files) {
+            const id = path.basename(file, '.json');
+            if (!/^\d{2}(?:-\d{2}){3}$/.test(id)) {
+                continue;
+            }
+            const filePath = path.join(questionsDir, file);
+            const questionCount = loadQuestionCount(filePath);
+            categories.push({
+                id,
+                name: nameMap.get(id) || id,
+                parentId: parentIdFromDetailId(id),
+                questionCount,
+            });
         }
-        const filePath = path.join(questionsDir, file);
-        const questionCount = loadQuestionCount(filePath);
-        categories.push({
-            id,
-            name: nameMap.get(id) || id,
-            parentId: parentIdFromDetailId(id),
-            questionCount,
-        });
+    } else {
+        const allQuestions = fs.existsSync(questionsJsonPath)
+            ? JSON.parse(fs.readFileSync(questionsJsonPath, 'utf8'))
+            : {};
+
+        for (const [id, questions] of Object.entries(allQuestions)) {
+            if (!/^\d{2}(?:-\d{2}){3}$/.test(id)) continue;
+            categories.push({
+                id,
+                name: nameMap.get(id) || id,
+                parentId: parentIdFromDetailId(id),
+                questionCount: Array.isArray(questions) ? questions.length : 0,
+            });
+        }
+
+        categories.sort((a, b) => a.id.localeCompare(b.id));
     }
 
     fs.writeFileSync(outPath, `${JSON.stringify(categories, null, 2)}\n`, 'utf8');
