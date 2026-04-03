@@ -43,3 +43,5 @@ jobs:
 
       - name: Validate questions data
         run: npm run validate:questions
+
+# Workflow trigger marker: keeps a concrete tracked change available for first-run bootstrap.
